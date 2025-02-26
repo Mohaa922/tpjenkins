@@ -42,7 +42,17 @@ pipeline {
             }
         }
     }
-
+    stage('Build Docker Image') {
+        steps {
+            script {
+                echo "Construction de l'image Docker..."
+                dir('tpjenkins') {
+                    sh 'docker build -t circle-perimeter .'
+                }
+            }
+        }
+    }
+    
     // Déclencheur SCM pour vérifier les changements toutes les 5 minutes
     triggers {
         pollSCM('H/5 * * * *')
