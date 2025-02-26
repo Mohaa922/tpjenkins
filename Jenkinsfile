@@ -1,45 +1,54 @@
 pipeline {
     agent any
-environment {
+
+    environment {
         GIT_REPO = 'https://github.com/Mohaa922/tpjenkins.git'  // Remplace par l'URL de ton dépôt GitHub
         BRANCH = 'main'  // Remplace par la branche que tu veux utiliser
     }
- 
+
     stages {
+        // Étape 1 : Cloner le dépôt Git
         stage('Cloner le code') {
             steps {
                 script {
-                    // Supprimer le répertoire existant si nécessaire
-                    sh 'rm -rf tpjenkins'
-                    // Cloner le dépôt depuis GitHub sans utiliser SCM Jenkins
-                    sh 'git clone --branch ${BRANCH} ${GIT_REPO}'
+                    echo "Clonage du dépôt Git..."
+                    sh 'rm -rf tpjenkins'  // Supprimer le répertoire existant si nécessaire
+                    sh 'git clone --branch ${BRANCH} ${GIT_REPO}'  // Cloner le dépôt
                 }
             }
         }
- 
+
+        // Étape 2 : Installer les dépendances
         stage('Installation des dépendances') {
             steps {
                 script {
-                    // Naviguer dans le répertoire du code cloné et installer les dépendances
-                    dir('tpjenkins') {
-                        sh 'pip install -r requirements.txt'  // Assure-toi d'avoir un fichier requirements.txt
+                    echo "Installation des dépendances..."
+                    dir('tpjenkins') {  // Naviguer dans le répertoire cloné
+                        sh 'pip install -r requirements.txt'  // Installer les dépendances
                     }
                 }
             }
         }
-    stages {
+
+        // Étape 3 : Exécuter les tests
         stage('Test') {
             steps {
-                echo "Exécution des tests unitaires..."
-                sh 'python -m pytest test_calculator.py'
+                script {
+                    echo "Exécution des tests unitaires..."
+                    dir('tpjenkins') {  // Naviguer dans le répertoire cloné
+                        sh 'python -m pytest test_calculator.py'  // Exécuter les tests
+                    }
+                }
             }
         }
     }
 
+    // Déclencheur SCM pour vérifier les changements toutes les 5 minutes
     triggers {
-        pollSCM('H/5 * * * *') // Vérifie les changements toutes les 5 minutes
+        pollSCM('H/5 * * * *')
     }
 
+    // Actions post-build
     post {
         success {
             echo "Pipeline réussie !"
