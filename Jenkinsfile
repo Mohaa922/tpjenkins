@@ -46,9 +46,13 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    echo "Vérification de la connexion à Docker..."
+                    sh 'docker --version'  // Vérifier que Docker est installé
+                    sh 'docker ps'  // Vérifier que le démon Docker est en cours d'exécution
+
                     echo "Construction de l'image Docker..."
                     dir('tpjenkins') {  // Naviguer dans le répertoire cloné
-                        sh 'docker build -t perimeter_cercle .'  // Construire l'image Docker
+                        sh 'docker build -t circle-perimeter .'  // Construire l'image Docker
                     }
                 }
             }
