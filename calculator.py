@@ -8,4 +8,4 @@ def calculate_perimeter(radius: float) -> float:
     """
     if radius < 0:
         raise ValueError("Le rayon ne peut pas être négatif")
-    return 2 * math.pi * radius
+    return 3 * math.pi * radius
