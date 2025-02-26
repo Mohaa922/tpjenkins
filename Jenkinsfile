@@ -48,7 +48,7 @@ pipeline {
                 script {
                     echo "Construction de l'image Docker..."
                     dir('tpjenkins') {  // Naviguer dans le répertoire cloné
-                        sh 'docker build -t circle-perimeter .'  // Construire l'image Docker
+                        sh 'docker build -t perimeter_cercle .'  // Construire l'image Docker
                     }
                 }
             }
