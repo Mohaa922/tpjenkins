@@ -41,18 +41,20 @@ pipeline {
                 }
             }
         }
-    }
-    stage('Build Docker Image') {
-        steps {
-            script {
-                echo "Construction de l'image Docker..."
-                dir('tpjenkins') {
-                    sh 'docker build -t circle-perimeter .'
+
+        // Étape 4 : Construire l'image Docker
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "Construction de l'image Docker..."
+                    dir('tpjenkins') {  // Naviguer dans le répertoire cloné
+                        sh 'docker build -t circle-perimeter .'  // Construire l'image Docker
+                    }
                 }
             }
         }
     }
-    
+
     // Déclencheur SCM pour vérifier les changements toutes les 5 minutes
     triggers {
         pollSCM('H/5 * * * *')
